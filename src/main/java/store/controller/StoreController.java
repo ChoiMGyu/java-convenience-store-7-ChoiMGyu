@@ -9,7 +9,6 @@ import store.model.product.Product;
 import store.model.promotion.Promotion;
 import store.refactorPromotion.*;
 import store.service.DiscountService;
-import store.service.ProductService;
 import view.InputView;
 import view.OutputView;
 import view.dto.ProductDto;

@@ -47,4 +47,21 @@ public class Store {
 
         return allQuantity >= quantity;
     }
+
+    public int getFreePromotion(String name, int quantity) {
+        FreeProductDto freeProductDto = promotionProduct.get(name).getPromotionType().calculateFreeProducts(quantity);
+        return freeProductDto.getFreeProduct();
+    }
+
+    public void updateStorePromotion(String name, int quantity) {
+        PromotionProduct product = promotionProduct.get(name);
+        if (product != null) {
+            product.purchaseProduct(quantity);
+            promotionProduct.put(name, product);
+        }
+    }
+
+    public Map<String, PromotionProduct> getPromotionProduct() {
+        return Collections.unmodifiableMap(promotionProduct);
+    }
 }

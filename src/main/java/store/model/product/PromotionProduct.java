@@ -28,6 +28,10 @@ public class PromotionProduct extends Product {
         return localDate.isAfter(start_date) && localDate.isBefore(end_date) && quantity > QUANTITY_MINIMUM;
     }
 
+    public PromotionType getPromotionType() {
+        return promotionType;
+    }
+
     @Override
     public String toString() {
         return super.toString() + " " + promotionName;
