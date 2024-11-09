@@ -48,6 +48,10 @@ public class Store {
         return allQuantity >= quantity;
     }
 
+    public boolean hasPromotion(String name) {
+        return promotionProduct.containsKey(name) && promotionProduct.get(name).hasQuantity();
+    }
+
     public int getFreePromotion(String name, int quantity) {
         FreeProductDto freeProductDto = promotionProduct.get(name).getPromotionType().calculateFreeProducts(quantity);
         return freeProductDto.getFreeProduct();

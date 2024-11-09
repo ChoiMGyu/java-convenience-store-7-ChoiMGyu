@@ -1,11 +1,15 @@
 package store.controller;
 
+import store.dto.SaleStrategyDto;
 import store.model.Receipt;
 import store.model.Store;
 import store.model.file.ProductFileReader;
 import store.model.file.PromotionFileReader;
 import store.model.product.Product;
 import store.model.promotion.Promotion;
+import store.refactorPromotion.*;
+import store.service.DiscountService;
+import store.service.ProductService;
 import view.InputView;
 import view.OutputView;
 import view.dto.ProductDto;
@@ -16,10 +20,12 @@ import java.util.List;
 public class StoreController {
     private static final int ADD_ONE = 1;
 
+    private final ProductService productService;
     private final InputView inputView;
     private final OutputView outputView;
 
-    public StoreController(InputView inputView, OutputView outputView) {
+    public StoreController(ProductService productService, InputView inputView, OutputView outputView) {
+        this.productService = productService;
         this.inputView = inputView;
         this.outputView = outputView;
     }
