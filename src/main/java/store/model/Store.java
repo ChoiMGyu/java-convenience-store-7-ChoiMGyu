@@ -69,6 +69,10 @@ public class Store {
         }
     }
 
+    public Map<String, GeneralProduct> getGenenralProduct() {
+        return Collections.unmodifiableMap(generalProduct);
+    }
+
     public Map<String, PromotionProduct> getPromotionProduct() {
         return Collections.unmodifiableMap(promotionProduct);
     }
