@@ -1,6 +1,5 @@
 package view;
 
-import store.model.Receipt;
 import store.model.product.GeneralProduct;
 import store.model.product.Product;
 import store.model.product.PromotionProduct;
