@@ -1,5 +1,6 @@
 package store.service;
 
+import store.dto.SaleStrategyDto;
 import store.model.Store;
 import store.model.product.PromotionProduct;
 import store.model.promotion.PromotionType;
@@ -16,11 +17,12 @@ public class ProductService {
         return false;
     }
 
-    public boolean confirmOnePromotion(Store store, String productName) {
+    public SaleStrategyDto confirmOnePromotion(Store store, String productName, int purchase) {
         PromotionProduct product = store.getPromotionProduct().get(productName);
+        int productQuantityStatus = store.enoughQuantity(productName, purchase);
         boolean answer = product != null && product.getPromotionType() == PromotionType.BUY_ONE_GET_ONE;
 
-        return answer;
+        return new SaleStrategyDto(productQuantityStatus, answer);
     }
 
     public int calculatePartial(Store store, String productName, int purchase) {
