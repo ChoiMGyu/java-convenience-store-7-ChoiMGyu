@@ -13,4 +13,8 @@ public class ProductService {
         }
         return false;
     }
+
+    public int calculatePartial(Store store, String productName, int purchase) {
+        return store.calculatePartial(productName, purchase);
+    }
 }

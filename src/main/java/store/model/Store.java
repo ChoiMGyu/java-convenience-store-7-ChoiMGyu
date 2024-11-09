@@ -65,6 +65,12 @@ public class Store {
         return freeProductDto.getAddOne();
     }
 
+    public int calculatePartial(String name, int quantity) {
+        int totalBuyGet = promotionProduct.get(name).getPromotionType().getTotalBuyGet();
+        int promotionQuantity = promotionProduct.get(name).getQuantity();
+        return quantity - (totalBuyGet * (promotionQuantity / totalBuyGet));
+    }
+
     public int getFreePromotion(String name, int quantity) {
         FreeProductDto freeProductDto = promotionProduct.get(name).getPromotionType().calculateFreeProducts(quantity);
         return freeProductDto.getFreeProduct();

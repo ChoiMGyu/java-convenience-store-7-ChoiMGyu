@@ -52,4 +52,8 @@ public enum PromotionType {
 
         return new FreeProductDto(freeProducts, addOne);
     }
+
+    public int getTotalBuyGet() {
+        return this.buy + this.get;
+    }
 }
