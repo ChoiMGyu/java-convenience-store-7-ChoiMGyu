@@ -1,5 +1,7 @@
 package store.model.promotion;
 
+import store.dto.FreeProductDto;
+
 import java.util.Arrays;
 
 public enum PromotionType {
@@ -24,5 +26,28 @@ public enum PromotionType {
 
     private boolean matches(int buy, int get) {
         return this.buy == buy && this.get == get;
+    }
+
+    public FreeProductDto calculateFreeProducts(int quantity) {
+        int freeProducts = 0;
+        boolean addOne = false;
+
+        if (this == BUY_ONE_GET_ONE) {
+            freeProducts += quantity / 2;
+            if (quantity % 2 == 1) {
+                addOne = true;
+            }
+            return new FreeProductDto(freeProducts, addOne);
+        }
+
+        if (this == BUY_TWO_GET_ONE) {
+            freeProducts = quantity / 3;
+            if (quantity % 3 == 2) {
+                addOne = true;
+            }
+            return new FreeProductDto(freeProducts, addOne);
+        }
+
+        return new FreeProductDto(freeProducts, addOne);
     }
 }
