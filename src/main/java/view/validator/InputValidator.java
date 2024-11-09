@@ -30,9 +30,9 @@ public class InputValidator {
 
         List<ProductDto> products = parseItems(item);
 
-        validateSameProduct(products); //같은 제품을 두 번 입력하는 경우 ex) [콜라-2],[콜라-3]
-        validateExistingProducts(store, products); //입력 받은 제품이 존재하는지
-        validateProductQuantities(store, products); //입력 받은 제품의 재고가 존재하는지
+        validateSameProduct(products);
+        validateExistingProducts(store, products);
+        validateProductQuantities(store, products);
 
         return Collections.unmodifiableList(products);
     }
