@@ -6,6 +6,8 @@ import store.model.file.PromotionFileReader;
 import store.model.product.Product;
 import store.model.promotion.Promotion;
 import view.InputView;
+import view.OutputView;
+import view.dto.ProductDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,9 +16,11 @@ public class StoreController {
     private static final int ADD_ONE = 1;
 
     private final InputView inputView;
+    private final OutputView outputView;
 
-    public StoreController(InputView inputView) {
+    public StoreController(InputView inputView, OutputView outputView) {
         this.inputView = inputView;
+        this.outputView = outputView;
     }
 
     public void run() {
@@ -26,6 +30,12 @@ public class StoreController {
             Store store = Store.createStore(products);
 
             while (true) {
+                outputView.printGreeting();
+                outputView.printItems(products);
+                List<ProductDto> productDtos = inputView.readItem(store);
+
+                boolean answerDiscount = inputView.readMemberDiscount();
+
                 if (!shouldContinuePurchase()) {
                     break;
                 }
