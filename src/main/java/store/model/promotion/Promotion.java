@@ -50,4 +50,24 @@ public class Promotion {
             throw new StoreException(LOCALDATE_AFTER_ERROR);
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getBuy() {
+        return buy;
+    }
+
+    public int getGet() {
+        return get;
+    }
+
+    public LocalDate getStart_date() {
+        return start_date;
+    }
+
+    public LocalDate getEnd_date() {
+        return end_date;
+    }
 }
