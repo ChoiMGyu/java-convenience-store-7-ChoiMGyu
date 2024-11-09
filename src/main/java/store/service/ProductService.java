@@ -1,11 +1,17 @@
 package store.service;
 
 import store.dto.SaleStrategyDto;
+import store.model.Receipt;
 import store.model.Store;
 import store.model.product.PromotionProduct;
 import store.model.promotion.PromotionType;
 
 public class ProductService {
+    public void purchaseProductGeneral(Store store, Receipt receipt, String productName, int purchase) {
+        receipt.addPurchase(productName, store.getGenenralProduct().get(productName).getPrice(), purchase);
+        store.updateStoreGeneral(productName, purchase);
+    }
+
     public boolean confirmPromotion(Store store, String productName) {
         return store.hasPromotion(productName);
     }
