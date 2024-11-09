@@ -39,6 +39,10 @@ public abstract class Product {
         this.quantity -= quantity;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
@@ -50,4 +54,5 @@ public abstract class Product {
         return String.format("- %s %s %d개", name, formattedPrice, quantity);
     }
 }
+
 
