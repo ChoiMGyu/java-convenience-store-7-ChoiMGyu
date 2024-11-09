@@ -61,6 +61,14 @@ public class Store {
         }
     }
 
+    public void updateStoreGeneral(String name, int quantity) {
+        GeneralProduct product = generalProduct.get(name);
+        if (product != null) {
+            product.purchaseProduct(quantity);
+            generalProduct.put(name, product);
+        }
+    }
+
     public Map<String, PromotionProduct> getPromotionProduct() {
         return Collections.unmodifiableMap(promotionProduct);
     }
