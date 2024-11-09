@@ -1,14 +1,11 @@
 package store.controller;
 
-import store.dto.SaleStrategyDto;
 import store.model.Receipt;
 import store.model.Store;
 import store.model.file.ProductFileReader;
 import store.model.file.PromotionFileReader;
 import store.model.product.Product;
 import store.model.promotion.Promotion;
-import store.refactorPromotion.*;
-import store.service.DiscountService;
 import store.service.ProductService;
 import view.InputView;
 import view.OutputView;
