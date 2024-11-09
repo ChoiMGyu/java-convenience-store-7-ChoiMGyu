@@ -52,6 +52,19 @@ public class Store {
         return promotionProduct.containsKey(name) && promotionProduct.get(name).hasQuantity();
     }
 
+    public int enoughQuantity(String name, int quantity) {
+        if (promotionProduct.containsKey(name)) {
+            PromotionProduct promotionProduct = this.promotionProduct.get(name);
+            return Integer.compare(promotionProduct.getQuantity(), quantity);
+        }
+        return 0;
+    }
+
+    public boolean checkAddOne(String name, int quantity) {
+        FreeProductDto freeProductDto = promotionProduct.get(name).getPromotionType().calculateFreeProducts(quantity);
+        return freeProductDto.getAddOne();
+    }
+
     public int getFreePromotion(String name, int quantity) {
         FreeProductDto freeProductDto = promotionProduct.get(name).getPromotionType().calculateFreeProducts(quantity);
         return freeProductDto.getFreeProduct();
