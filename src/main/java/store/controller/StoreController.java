@@ -1,10 +1,15 @@
 package store.controller;
 
+import store.dto.SaleStrategyDto;
+import store.model.Receipt;
 import store.model.Store;
 import store.model.file.ProductFileReader;
 import store.model.file.PromotionFileReader;
 import store.model.product.Product;
 import store.model.promotion.Promotion;
+import store.refactorPromotion.*;
+import store.service.DiscountService;
+import store.service.ProductService;
 import view.InputView;
 import view.OutputView;
 import view.dto.ProductDto;
@@ -34,7 +39,11 @@ public class StoreController {
                 outputView.printItems(products);
                 List<ProductDto> productDtos = inputView.readItem(store);
 
+                Receipt receipt = Receipt.createReceipt();
+
                 boolean answerDiscount = inputView.readMemberDiscount();
+
+                outputView.printReceipt(receipt);
 
                 if (!shouldContinuePurchase()) {
                     break;
