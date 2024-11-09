@@ -4,6 +4,8 @@ import store.dto.FreeProductDto;
 
 import java.util.Arrays;
 
+import static store.model.promotion.PromotionTypeConstant.*;
+
 public enum PromotionType {
     NO_PROMOTION(0, 0),
     BUY_ONE_GET_ONE(1, 1),
@@ -33,16 +35,16 @@ public enum PromotionType {
         boolean addOne = false;
 
         if (this == BUY_ONE_GET_ONE) {
-            freeProducts += quantity / 2;
-            if (quantity % 2 == 1) {
+            freeProducts += quantity / BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant();
+            if (quantity % BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant() == BUY_ONE_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
                 addOne = true;
             }
             return new FreeProductDto(freeProducts, addOne);
         }
 
         if (this == BUY_TWO_GET_ONE) {
-            freeProducts = quantity / 3;
-            if (quantity % 3 == 2) {
+            freeProducts = quantity / BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant();
+            if (quantity % BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant() == BUY_TWO_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
                 addOne = true;
             }
             return new FreeProductDto(freeProducts, addOne);
