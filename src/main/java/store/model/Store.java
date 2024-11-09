@@ -1,12 +1,12 @@
 package store.model;
 
+import store.dto.FreeProductDto;
 import store.model.product.GeneralProduct;
 import store.model.product.Product;
 import store.model.product.PromotionProduct;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Store {
     private final Map<String, GeneralProduct> generalProduct;
@@ -32,5 +32,19 @@ public class Store {
         }
 
         return new Store(generalProduct, promotionProduct);
+    }
+
+    public boolean isExistProduct(String name) {
+        return generalProduct.containsKey(name) || promotionProduct.containsKey(name);
+    }
+
+    public boolean isExistQuantity(String name, int quantity) {
+        int allQuantity = Stream.of(generalProduct, promotionProduct)
+                .map(map -> map.get(name))
+                .filter(Objects::nonNull)
+                .mapToInt(product -> product.getQuantity())
+                .sum();
+
+        return allQuantity >= quantity;
     }
 }
