@@ -12,7 +12,7 @@ public class DiscountService {
         int totalCount = receipt.calculateTotalQuantity();
         int totalMoney = receipt.calculateTotalMoney();
 
-        return new ReceiptContent(totalCount, totalMoney);
+        return new ReceiptContent(totalMoney, totalCount);
     }
 
     public int calculatePromotionDiscount(Receipt receipt) {
