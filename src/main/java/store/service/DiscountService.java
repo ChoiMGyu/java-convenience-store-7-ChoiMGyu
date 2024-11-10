@@ -6,7 +6,6 @@ import store.model.Receipt;
 public class DiscountService {
     private static final int NO_MEMBERSHIP_DISCOUNT = 0;
 
-    //총 지불해야 하는 금액
     public ReceiptDto calculateTotalMoney(Receipt receipt) {
         int totalCount = receipt.calculateTotalQuantity();
         int totalMoney = receipt.calculateTotalMoney();
@@ -14,7 +13,6 @@ public class DiscountService {
         return new ReceiptDto(totalCount, totalMoney);
     }
 
-    //프로모션 할인
     public int calculatePromotionDiscount(Receipt receipt) {
         int totalPromotion = receipt.calculateEventDiscount();
 
@@ -22,7 +20,6 @@ public class DiscountService {
     }
 
 
-    //멤버십 할인
     public int calculateMemberShipDiscount(Receipt receipt, boolean answer) {
         int totalMoney = receipt.calculateTotalMoney();
         if (answer) {
@@ -33,14 +30,13 @@ public class DiscountService {
     }
 
 
-    //내야 할 돈
     public int calculatePurchase(Receipt receipt, boolean answer) {
         int totalMoney = receipt.calculateTotalMoney();
         int promotionDiscount = receipt.calculateEventDiscount();
         int memberShipDiscount = receipt.calculateMemberShipDiscount(totalMoney);
         int purchase;
 
-        if(answer) {
+        if (answer) {
             purchase = receipt.calculatePurchase(totalMoney, promotionDiscount, memberShipDiscount);
             return purchase;
         }

@@ -2,10 +2,8 @@ package store.model;
 
 import store.dto.ReceiptDto;
 
-import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
