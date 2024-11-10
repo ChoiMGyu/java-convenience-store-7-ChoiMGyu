@@ -1,11 +1,15 @@
 package view;
 
+import store.dto.ReceiptDto;
 import store.model.Receipt;
 import store.model.product.GeneralProduct;
 import store.model.product.Product;
 import store.model.product.PromotionProduct;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class OutputView {
     private void printLineSeperate() {
@@ -25,8 +29,60 @@ public class OutputView {
         printLineSeperate();
     }
 
-    public void printReceipt(Receipt receipt) {
-        System.out.println(receipt);
+    public void printReceipt(Receipt receipt, ReceiptDto receiptDto, int promotionDiscount, int memberShipDiscount, int purchaseMoney) {
+        System.out.println("==============W 편의점================");
+
+        printPurchase(receipt);
+        printGift(receipt);
+
+        printTotalMoney(receiptDto);
+        printPromotionDiscount(promotionDiscount);
+        printMemberShipDiscount(memberShipDiscount);
+        printPurchaseMoney(purchaseMoney);
     }
 
+    private String numberFormatKorea(int price) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
+        return formatter.format(price);
+    }
+
+    private void printPurchase(Receipt receipt) {
+        System.out.printf("%-18s%-9s%-4s\n", "상품명", "수량", "금액");
+        Map<String, ReceiptDto> purchase = receipt.getPurchase();
+        for (Map.Entry<String, ReceiptDto> entry : purchase.entrySet()) {
+            int price = entry.getValue().getPrice() * entry.getValue().getQuantity();
+            String formattedMoney = numberFormatKorea(price);
+            System.out.printf("%-17s%-10d%-4s\n", entry.getKey(), entry.getValue().getQuantity(), formattedMoney);
+        }
+    }
+
+    private void printGift(Receipt receipt) {
+        System.out.println("=============증     정===============");
+        Map<String, ReceiptDto> gift = receipt.getGift();
+        for (Map.Entry<String, ReceiptDto> entry : gift.entrySet()) {
+            System.out.printf("%-17s%-10d\n", entry.getKey(), entry.getValue().getQuantity());
+        }
+    }
+
+    private void printTotalMoney(ReceiptDto receiptDto) {
+        System.out.println("====================================");
+        String convertedMoney = numberFormatKorea(receiptDto.getPrice());
+        System.out.printf("%-17s%-10d%-4s\n", "총구매액", receiptDto.getQuantity(), convertedMoney);
+    }
+
+    private void printPromotionDiscount(int promotionDiscount) {
+        String convertedMoney = numberFormatKorea(-promotionDiscount);
+        System.out.printf("%-27s%10s\n", "행사할인", convertedMoney);
+    }
+
+    private void printMemberShipDiscount(int memberShipDiscount) {
+        String convertedMoney = numberFormatKorea(-memberShipDiscount);
+        System.out.printf("%-27s%10s\n", "멤버십할인", convertedMoney);
+    }
+
+    private void printPurchaseMoney(int purchaseMoney) {
+        String convertedMoney = numberFormatKorea(purchaseMoney);
+        System.out.printf("%-27s%10s\n", "내실돈", convertedMoney);
+        printLineSeperate();
+    }
 }

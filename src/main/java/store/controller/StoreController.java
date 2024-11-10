@@ -1,5 +1,6 @@
 package store.controller;
 
+import store.dto.ReceiptDto;
 import store.dto.SaleStrategyDto;
 import store.model.Receipt;
 import store.model.Store;
@@ -47,9 +48,7 @@ public class StoreController {
                 processProducts(store, productDtos, receipt);
 
                 boolean answerDiscount = inputView.readMemberDiscount();
-                applyDiscount(receipt, answerDiscount);
-
-                outputView.printReceipt(receipt);
+                printReceipt(receipt, answerDiscount);
 
                 if (!shouldContinuePurchase()) {
                     break;
@@ -113,8 +112,13 @@ public class StoreController {
         return new PromotionOnlyStrategy();
     }
 
-    private void applyDiscount(Receipt receipt, boolean answerDiscount) {
-        discountService.calculateMemberShipDiscount(receipt, answerDiscount);
+    private void printReceipt(Receipt receipt, boolean answerDiscount) {
+        ReceiptDto receiptDto = discountService.calculateTotalMoney(receipt);
+        int promotionDiscount = discountService.calculatePromotionDiscount(receipt);
+        int memberShipDiscount = discountService.calculateMemberShipDiscount(receipt, answerDiscount);
+        int purchaseMoney = discountService.calculatePurchase(receipt, answerDiscount);
+
+        outputView.printReceipt(receipt, receiptDto, promotionDiscount, memberShipDiscount, purchaseMoney);
     }
 
     private boolean shouldContinuePurchase() {

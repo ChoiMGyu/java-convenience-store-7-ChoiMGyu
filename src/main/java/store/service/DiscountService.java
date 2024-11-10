@@ -1,19 +1,49 @@
 package store.service;
 
+import store.dto.ReceiptDto;
 import store.model.Receipt;
 
 public class DiscountService {
-    private static final int MEMBERSHIP_DISCOUNT_MAX = 8000;
-    private static final double MEMBERSHIP_DISCOUNT = 0.3;
+    private static final int NO_MEMBERSHIP_DISCOUNT = 0;
 
-    public void calculateMemberShipDiscount(Receipt receipt, boolean answer) {
+    //총 지불해야 하는 금액
+    public ReceiptDto calculateTotalMoney(Receipt receipt) {
+        int totalCount = receipt.calculateTotalQuantity();
+        int totalMoney = receipt.calculateTotalMoney();
+
+        return new ReceiptDto(totalCount, totalMoney);
+    }
+
+    //프로모션 할인
+    public int calculatePromotionDiscount(Receipt receipt) {
+        int totalPromotion = receipt.calculateEventDiscount();
+
+        return totalPromotion;
+    }
+
+
+    //멤버십 할인
+    public int calculateMemberShipDiscount(Receipt receipt, boolean answer) {
         int totalMoney = receipt.calculateTotalMoney();
         if (answer) {
-            int discount = (int) (totalMoney * MEMBERSHIP_DISCOUNT);
-            if (discount > MEMBERSHIP_DISCOUNT_MAX) {
-                discount = MEMBERSHIP_DISCOUNT_MAX;
-            }
-            receipt.calculateMemberShipDiscount(discount);
+            int memberShipDiscount = receipt.calculateMemberShipDiscount(totalMoney);
+            return memberShipDiscount;
         }
+        return NO_MEMBERSHIP_DISCOUNT;
+    }
+
+
+    //내야 할 돈
+    public int calculatePurchase(Receipt receipt, boolean answer) {
+        int totalMoney = receipt.calculateTotalMoney();
+        int promotionDiscount = receipt.calculateEventDiscount();
+        int memberShipDiscount = receipt.calculateMemberShipDiscount(totalMoney);
+        int purchase;
+
+        if(answer) {
+            purchase = receipt.calculatePurchase(totalMoney, promotionDiscount, memberShipDiscount);
+            return purchase;
+        }
+        return receipt.calculatePurchase(totalMoney, promotionDiscount, NO_MEMBERSHIP_DISCOUNT);
     }
 }
