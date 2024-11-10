@@ -61,7 +61,7 @@ public class InputValidator {
                 .count();
 
         if (distinctCount != products.size()) {
-            throw new StoreException(ITEM_SHAPE_ERROR);
+            throw new StoreException(INCORRECT_ERROR);
         }
     }
 
