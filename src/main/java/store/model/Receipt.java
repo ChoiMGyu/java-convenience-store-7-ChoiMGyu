@@ -65,6 +65,16 @@ public class Receipt {
         return memberShipDiscount;
     }
 
+    public int calculateNotDuplicateDiscount() {
+        int totalMoney = 0;
+        for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
+            if (!gift.containsKey(entry.getKey())) {
+                totalMoney += entry.getValue().calculateProductPerMoney();
+            }
+        }
+        return totalMoney;
+    }
+
 
     public int calculatePurchase(int totalMoney, int promotionDiscount, int memberShipDiscount) {
         return totalMoney - promotionDiscount - memberShipDiscount;

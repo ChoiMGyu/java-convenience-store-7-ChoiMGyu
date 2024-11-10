@@ -23,19 +23,10 @@ public class DiscountService {
 
 
     public int calculateMemberShipDiscount(Receipt receipt, boolean answer) {
-        //프로모션 할인을 받지 않은 상품에 대해서만 할인을 적용해야 한다
-        //즉,purchase에 있는 상품들 중에 gift에 없는 것들만 할인을 적용해야 한다
-        Map<String, ReceiptContent> gift = receipt.getGift();
-        Map<String, ReceiptContent> purchase = receipt.getPurchase();
         if (answer) {
             int totalMoney = 0;
 
-            // purchase에 있지만 gift에 없는 상품들만 처리
-            for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
-                if (!gift.containsKey(entry.getKey())) {
-                    totalMoney += entry.getValue().getPrice() * entry.getValue().getQuantity();
-                }
-            }
+            totalMoney = receipt.calculateNotDuplicateDiscount();
 
             int memberShipDiscount = receipt.calculateMemberShipDiscount(totalMoney);
             return memberShipDiscount;
@@ -47,17 +38,9 @@ public class DiscountService {
     public int calculatePurchase(Receipt receipt, boolean answer) {
         int totalMoney = receipt.calculateTotalMoney();
         int promotionDiscount = receipt.calculateEventDiscount();
-        Map<String, ReceiptContent> gift = receipt.getGift();
-        Map<String, ReceiptContent> purchase = receipt.getPurchase();
-        int tmpMoney = 0;
 
-        // purchase에 있지만 gift에 없는 상품들만 처리
-        for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
-            if (!gift.containsKey(entry.getKey())) {
-                tmpMoney += entry.getValue().getPrice() * entry.getValue().getQuantity();
-            }
-        }
-        int memberShipDiscount = receipt.calculateMemberShipDiscount(tmpMoney);
+        int notDuplicate = receipt.calculateNotDuplicateDiscount();
+        int memberShipDiscount = receipt.calculateMemberShipDiscount(notDuplicate);
         int purchaseMoney;
 
         if (answer) {
