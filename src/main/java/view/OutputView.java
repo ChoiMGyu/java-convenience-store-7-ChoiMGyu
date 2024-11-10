@@ -72,11 +72,17 @@ public class OutputView {
 
     private void printPromotionDiscount(int promotionDiscount) {
         String convertedMoney = numberFormatKorea(-promotionDiscount);
+        if(promotionDiscount == 0) {
+            convertedMoney = "-0";
+        }
         System.out.printf("%-27s%10s\n", "행사할인", convertedMoney);
     }
 
     private void printMemberShipDiscount(int memberShipDiscount) {
         String convertedMoney = numberFormatKorea(-memberShipDiscount);
+        if(memberShipDiscount == 0) {
+            convertedMoney = "-0";
+        }
         System.out.printf("%-27s%10s\n", "멤버십할인", convertedMoney);
     }
 
