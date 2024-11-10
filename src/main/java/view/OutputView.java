@@ -1,6 +1,6 @@
 package view;
 
-import store.dto.ReceiptDto;
+import store.model.ReceiptContent;
 import store.model.Receipt;
 import store.model.product.GeneralProduct;
 import store.model.product.Product;
@@ -29,13 +29,13 @@ public class OutputView {
         printLineSeperate();
     }
 
-    public void printReceipt(Receipt receipt, ReceiptDto receiptDto, int promotionDiscount, int memberShipDiscount, int purchaseMoney) {
+    public void printReceipt(Receipt receipt, ReceiptContent receiptContent, int promotionDiscount, int memberShipDiscount, int purchaseMoney) {
         System.out.println("==============W 편의점================");
 
         printPurchase(receipt);
         printGift(receipt);
 
-        printTotalMoney(receiptDto);
+        printTotalMoney(receiptContent);
         printPromotionDiscount(promotionDiscount);
         printMemberShipDiscount(memberShipDiscount);
         printPurchaseMoney(purchaseMoney);
@@ -48,9 +48,9 @@ public class OutputView {
 
     private void printPurchase(Receipt receipt) {
         System.out.printf("%-18s%-9s%-4s\n", "상품명", "수량", "금액");
-        Map<String, ReceiptDto> purchase = receipt.getPurchase();
-        for (Map.Entry<String, ReceiptDto> entry : purchase.entrySet()) {
-            int price = entry.getValue().getPrice() * entry.getValue().getQuantity();
+        Map<String, ReceiptContent> purchase = receipt.getPurchase();
+        for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
+            int price = entry.getValue().calculateProductPerMoney();
             String formattedMoney = numberFormatKorea(price);
             System.out.printf("%-17s%-10d%-4s\n", entry.getKey(), entry.getValue().getQuantity(), formattedMoney);
         }
@@ -58,16 +58,16 @@ public class OutputView {
 
     private void printGift(Receipt receipt) {
         System.out.println("=============증     정===============");
-        Map<String, ReceiptDto> gift = receipt.getGift();
-        for (Map.Entry<String, ReceiptDto> entry : gift.entrySet()) {
+        Map<String, ReceiptContent> gift = receipt.getGift();
+        for (Map.Entry<String, ReceiptContent> entry : gift.entrySet()) {
             System.out.printf("%-17s%-10d\n", entry.getKey(), entry.getValue().getQuantity());
         }
     }
 
-    private void printTotalMoney(ReceiptDto receiptDto) {
+    private void printTotalMoney(ReceiptContent receiptContent) {
         System.out.println("====================================");
-        String convertedMoney = numberFormatKorea(receiptDto.getPrice());
-        System.out.printf("%-17s%-10d%-4s\n", "총구매액", receiptDto.getQuantity(), convertedMoney);
+        String convertedMoney = numberFormatKorea(receiptContent.getPrice());
+        System.out.printf("%-17s%-10d%-4s\n", "총구매액", receiptContent.getQuantity(), convertedMoney);
     }
 
     private void printPromotionDiscount(int promotionDiscount) {

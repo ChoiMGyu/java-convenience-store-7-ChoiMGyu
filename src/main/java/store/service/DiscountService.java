@@ -1,16 +1,16 @@
 package store.service;
 
-import store.dto.ReceiptDto;
+import store.model.ReceiptContent;
 import store.model.Receipt;
 
 public class DiscountService {
     private static final int NO_MEMBERSHIP_DISCOUNT = 0;
 
-    public ReceiptDto calculateTotalMoney(Receipt receipt) {
+    public ReceiptContent calculateTotalMoney(Receipt receipt) {
         int totalCount = receipt.calculateTotalQuantity();
         int totalMoney = receipt.calculateTotalMoney();
 
-        return new ReceiptDto(totalCount, totalMoney);
+        return new ReceiptContent(totalCount, totalMoney);
     }
 
     public int calculatePromotionDiscount(Receipt receipt) {

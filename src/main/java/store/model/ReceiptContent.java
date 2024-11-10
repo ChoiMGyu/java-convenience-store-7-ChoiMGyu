@@ -1,12 +1,16 @@
-package store.dto;
+package store.model;
 
-public class ReceiptDto {
+public class ReceiptContent {
     private int price;
     private int quantity;
 
-    public ReceiptDto(int price, int quantity) {
+    public ReceiptContent(int price, int quantity) {
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public int calculateProductPerMoney() {
+        return price * quantity;
     }
 
     public int getPrice() {

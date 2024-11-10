@@ -1,7 +1,5 @@
 package store.model;
 
-import store.dto.ReceiptDto;
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,31 +9,31 @@ public class Receipt {
     private static final int MEMBERSHIP_DISCOUNT_MAX = 8000;
     private static final double MEMBERSHIP_DISCOUNT = 0.3;
 
-    private Map<String, ReceiptDto> purchase;
-    private Map<String, ReceiptDto> gift;
+    private Map<String, ReceiptContent> purchase;
+    private Map<String, ReceiptContent> gift;
 
-    private Receipt(Map<String, ReceiptDto> purchase, Map<String, ReceiptDto> gift) {
+    private Receipt(Map<String, ReceiptContent> purchase, Map<String, ReceiptContent> gift) {
         this.purchase = purchase;
         this.gift = gift;
     }
 
     public static Receipt createReceipt() {
-        Map<String, ReceiptDto> purchase = new LinkedHashMap<>();
-        Map<String, ReceiptDto> gift = new LinkedHashMap<>();
+        Map<String, ReceiptContent> purchase = new LinkedHashMap<>();
+        Map<String, ReceiptContent> gift = new LinkedHashMap<>();
         return new Receipt(purchase, gift);
     }
 
     public void addPurchase(String name, int price, int quantity) {
-        purchase.put(name, new ReceiptDto(price, quantity));
+        purchase.put(name, new ReceiptContent(price, quantity));
     }
 
     public void addGift(String name, int price, int quantity) {
-        gift.put(name, new ReceiptDto(price, quantity));
+        gift.put(name, new ReceiptContent(price, quantity));
     }
 
     public int calculateTotalQuantity() {
         int totalCount = 0;
-        for (Map.Entry<String, ReceiptDto> entry : purchase.entrySet()) {
+        for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
             totalCount += entry.getValue().getQuantity();
         }
         return totalCount;
@@ -43,8 +41,8 @@ public class Receipt {
 
     public int calculateTotalMoney() {
         int totalMoney = 0;
-        for (Map.Entry<String, ReceiptDto> entry : purchase.entrySet()) {
-            int price = entry.getValue().getPrice() * entry.getValue().getQuantity();
+        for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
+            int price = entry.getValue().calculateProductPerMoney();
             totalMoney += price;
         }
         return totalMoney;
@@ -52,8 +50,8 @@ public class Receipt {
 
     public int calculateEventDiscount() {
         int discount = 0;
-        for (Map.Entry<String, ReceiptDto> entry : gift.entrySet()) {
-            int price = entry.getValue().getPrice() * entry.getValue().getQuantity();
+        for (Map.Entry<String, ReceiptContent> entry : gift.entrySet()) {
+            int price = entry.getValue().calculateProductPerMoney();
             discount += price;
         }
         return discount;
@@ -72,22 +70,22 @@ public class Receipt {
         return totalMoney - promotionDiscount - memberShipDiscount;
     }
 
-    public Map<String, ReceiptDto> getPurchase() {
+    public Map<String, ReceiptContent> getPurchase() {
         return Collections.unmodifiableMap(
                 purchase.entrySet().stream()
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
-                                entry -> new ReceiptDto(entry.getValue().getPrice(), entry.getValue().getQuantity())
+                                entry -> new ReceiptContent(entry.getValue().getPrice(), entry.getValue().getQuantity())
                         ))
         );
     }
 
-    public Map<String, ReceiptDto> getGift() {
+    public Map<String, ReceiptContent> getGift() {
         return Collections.unmodifiableMap(
                 gift.entrySet().stream()
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
-                                entry -> new ReceiptDto(entry.getValue().getPrice(), entry.getValue().getQuantity())
+                                entry -> new ReceiptContent(entry.getValue().getPrice(), entry.getValue().getQuantity())
                         ))
         );
     }

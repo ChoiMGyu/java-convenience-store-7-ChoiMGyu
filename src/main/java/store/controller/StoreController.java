@@ -1,6 +1,6 @@
 package store.controller;
 
-import store.dto.ReceiptDto;
+import store.model.ReceiptContent;
 import store.dto.SaleStrategyDto;
 import store.model.Receipt;
 import store.model.Store;
@@ -113,12 +113,12 @@ public class StoreController {
     }
 
     private void printReceipt(Receipt receipt, boolean answerDiscount) {
-        ReceiptDto receiptDto = discountService.calculateTotalMoney(receipt);
+        ReceiptContent receiptContent = discountService.calculateTotalMoney(receipt);
         int promotionDiscount = discountService.calculatePromotionDiscount(receipt);
         int memberShipDiscount = discountService.calculateMemberShipDiscount(receipt, answerDiscount);
         int purchaseMoney = discountService.calculatePurchase(receipt, answerDiscount);
 
-        outputView.printReceipt(receipt, receiptDto, promotionDiscount, memberShipDiscount, purchaseMoney);
+        outputView.printReceipt(receipt, receiptContent, promotionDiscount, memberShipDiscount, purchaseMoney);
     }
 
     private boolean shouldContinuePurchase() {
