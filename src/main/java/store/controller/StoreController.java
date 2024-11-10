@@ -1,8 +1,8 @@
 package store.controller;
 
-import store.model.ReceiptContent;
 import store.dto.SaleStrategyDto;
 import store.model.Receipt;
+import store.model.ReceiptContent;
 import store.model.Store;
 import store.model.file.ProductFileReader;
 import store.model.file.PromotionFileReader;
@@ -39,23 +39,27 @@ public class StoreController {
             List<Product> products = readProducts(promotions);
             Store store = Store.createStore(products);
 
-            while (true) {
-                outputView.printGreeting();
-                outputView.printItems(products);
-                List<ProductDto> productDtos = inputView.readItem(store);
-
-                Receipt receipt = Receipt.createReceipt();
-                processProducts(store, productDtos, receipt);
-
-                boolean answerDiscount = inputView.readMemberDiscount();
-                printReceipt(receipt, answerDiscount);
-
-                if (!shouldContinuePurchase()) {
-                    break;
-                }
-            }
+            storeProcess(products, store);
         } catch (IOException e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    private void storeProcess(List<Product> products, Store store) {
+        while (true) {
+            outputView.printGreeting();
+            outputView.printItems(products);
+            List<ProductDto> productDtos = inputView.readItem(store);
+
+            Receipt receipt = Receipt.createReceipt();
+            processProducts(store, productDtos, receipt);
+
+            boolean answerDiscount = inputView.readMemberDiscount();
+            printReceipt(receipt, answerDiscount);
+
+            if (!shouldContinuePurchase()) {
+                break;
+            }
         }
     }
 
@@ -79,9 +83,15 @@ public class StoreController {
         if (saleStrategy instanceof AddOneSaleStrategy) {
             boolean answer = inputView.readAddItem(productName, ADD_ONE);
             saleStrategy.execute(store, receipt, productName, purchaseCount, answer);
-        } else if (saleStrategy instanceof PromotionOnlyStrategy) {
+            return;
+        }
+
+        if (saleStrategy instanceof PromotionOnlyStrategy) {
             saleStrategy.execute(store, receipt, productName, purchaseCount);
-        } else if (saleStrategy instanceof OriginalPurchaseStrategy) {
+            return;
+        }
+
+        if (saleStrategy instanceof OriginalPurchaseStrategy) {
             boolean answer = inputView.readPartialPayment(productName, productService.calculatePartial(store, productName, purchaseCount));
             saleStrategy.execute(store, receipt, productName, purchaseCount, productService.calculatePartial(store, productName, purchaseCount), answer);
         }
