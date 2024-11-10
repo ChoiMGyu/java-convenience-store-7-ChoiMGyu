@@ -15,7 +15,10 @@ import view.InputView;
 import view.OutputView;
 import view.dto.ProductDto;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class StoreController {
@@ -150,12 +153,16 @@ public class StoreController {
 
     private List<Promotion> readPromotions() throws IOException {
         PromotionFileReader promotionFileReader = new PromotionFileReader();
-        return promotionFileReader.read("src\\main\\resources\\promotions.md");
+
+        String path = getClass().getClassLoader().getResource("promotions.md").getPath();
+        return promotionFileReader.read(path);
     }
 
     private List<Product> readProducts(List<Promotion> promotions) throws IOException {
         ProductFileReader productFileReader = new ProductFileReader();
-        return productFileReader.read("src\\main\\resources\\products.md", promotions);
+
+        String path = getClass().getClassLoader().getResource("products.md").getPath();
+        return productFileReader.read(path, promotions);
     }
 
 }
