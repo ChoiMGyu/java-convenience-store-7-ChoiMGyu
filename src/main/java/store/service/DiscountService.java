@@ -37,16 +37,20 @@ public class DiscountService {
 
     public int calculatePurchase(Receipt receipt, boolean answer) {
         int totalMoney = receipt.calculateTotalMoney();
-        int promotionDiscount = receipt.calculateEventDiscount();
+        int promotionDiscount = calculatePromotionDiscount(receipt);
+        int memberShipDiscount = calculateApplicableMemberShipDiscount(receipt, answer);
+        return computeFinalPurchaseAmount(receipt, totalMoney, promotionDiscount, memberShipDiscount);
+    }
 
-        int notDuplicate = receipt.calculateNotDuplicateDiscount();
-        int memberShipDiscount = receipt.calculateMemberShipDiscount(notDuplicate);
-        int purchaseMoney;
-
+    private int calculateApplicableMemberShipDiscount(Receipt receipt, boolean answer) {
         if (answer) {
-            purchaseMoney = receipt.calculatePurchase(totalMoney, promotionDiscount, memberShipDiscount);
-            return purchaseMoney;
+            int nonDuplicateDiscount = receipt.calculateNotDuplicateDiscount();
+            return receipt.calculateMemberShipDiscount(nonDuplicateDiscount);
         }
-        return receipt.calculatePurchase(totalMoney, promotionDiscount, NO_MEMBERSHIP_DISCOUNT);
+        return NO_MEMBERSHIP_DISCOUNT;
+    }
+
+    private int computeFinalPurchaseAmount(Receipt receipt, int totalMoney, int promotionDiscount, int memberShipDiscount) {
+        return receipt.calculatePurchase(totalMoney, promotionDiscount, memberShipDiscount);
     }
 }
