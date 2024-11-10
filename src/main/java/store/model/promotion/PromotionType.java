@@ -31,27 +31,35 @@ public enum PromotionType {
     }
 
     public FreeProductDto calculateFreeProducts(int quantity) {
-        int freeProducts = 0;
-        boolean addOne = false;
-
         if (this == BUY_ONE_GET_ONE) {
-            freeProducts += quantity / BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant();
-            if (quantity % BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant() == BUY_ONE_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
-                addOne = true;
-            }
-            return new FreeProductDto(freeProducts, addOne);
+            return calculateBuyOneGetOne(quantity);
         }
 
         if (this == BUY_TWO_GET_ONE) {
-            freeProducts = quantity / BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant();
-            if (quantity % BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant() == BUY_TWO_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
-                addOne = true;
-            }
-            return new FreeProductDto(freeProducts, addOne);
+            return calculateBuyTwoGetOne(quantity);
         }
 
+        return new FreeProductDto(0, false);
+    }
+
+    private FreeProductDto calculateBuyOneGetOne(int quantity) {
+        int freeProducts = quantity / BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant();
+        boolean addOne = false;
+        if (quantity % BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant() == BUY_TWO_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
+            addOne = true;
+        }
         return new FreeProductDto(freeProducts, addOne);
     }
+
+    private FreeProductDto calculateBuyTwoGetOne(int quantity) {
+        int freeProducts = quantity / BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant();
+        boolean addOne = false;
+        if (quantity % BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant() == BUY_TWO_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
+            addOne = true;
+        }
+        return new FreeProductDto(freeProducts, addOne);
+    }
+
 
     public int getTotalBuyGet() {
         return this.buy + this.get;
