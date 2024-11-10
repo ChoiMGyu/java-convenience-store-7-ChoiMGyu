@@ -10,22 +10,47 @@ public class AddOneSaleStrategy implements SaleStrategy {
     @Override
     public void execute(Store store, Receipt receipt, String productName, int quantity, Object... options) {
         boolean addOne = (boolean) options[0];
-        purchaseProductAddOne(store, receipt, productName, quantity, addOne);
+        processPurchase(store, receipt, productName, quantity, addOne);
     }
 
-    private void purchaseProductAddOne(Store store, Receipt receipt, String productName, int quantity, boolean addOne) {
-        int free = store.getFreePromotion(productName, quantity);
-        int totalQuantity = quantity;
+    private void processPurchase(Store store, Receipt receipt, String productName, int quantity, boolean addOne) {
+        int freeItems = calculateFreeItems(store, productName, quantity, addOne);
+        int totalQuantity = calculateTotalQuantity(quantity, addOne);
 
+        addPurchasedItemsToReceipt(receipt, productName, totalQuantity, store);
+        addGiftItemsToReceiptIfApplicable(receipt, productName, freeItems, store);
+        updateStoreInventory(store, productName, totalQuantity);
+    }
+
+    private int calculateFreeItems(Store store, String productName, int quantity, boolean addOne) {
+        int freeItems = store.getFreePromotion(productName, quantity);
+        if (addOne) {
+            freeItems += ADD_ONE;
+        }
+        return freeItems;
+    }
+
+    private int calculateTotalQuantity(int quantity, boolean addOne) {
+        int totalQuantity = quantity;
         if (addOne) {
             totalQuantity += ADD_ONE;
-            free += ADD_ONE;
         }
+        return totalQuantity;
+    }
 
-        receipt.addPurchase(productName, store.getPromotionProduct().get(productName).getPrice(), totalQuantity);
-        if (free != ZERO_COUNT_PRODUCT) {
-            receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
+    private void addPurchasedItemsToReceipt(Receipt receipt, String productName, int totalQuantity, Store store) {
+        int productPrice = store.getPromotionProduct().get(productName).getPrice();
+        receipt.addPurchase(productName, productPrice, totalQuantity);
+    }
+
+    private void addGiftItemsToReceiptIfApplicable(Receipt receipt, String productName, int freeItems, Store store) {
+        if (freeItems != ZERO_COUNT_PRODUCT) {
+            int productPrice = store.getPromotionProduct().get(productName).getPrice();
+            receipt.addGift(productName, productPrice, freeItems);
         }
+    }
+
+    private void updateStoreInventory(Store store, String productName, int totalQuantity) {
         store.updateStorePromotion(productName, totalQuantity);
     }
 }
