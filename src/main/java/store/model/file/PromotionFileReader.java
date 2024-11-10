@@ -19,14 +19,17 @@ public class PromotionFileReader {
 
     public List<Promotion> read(String filePath) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            skipHeader(reader);
             return readPromotions(reader);
         }
     }
 
+    private void skipHeader(BufferedReader reader) throws IOException {
+        reader.readLine();
+    }
+
     private List<Promotion> readPromotions(BufferedReader reader) throws IOException {
         List<Promotion> promotions = new ArrayList<>();
-        reader.readLine();
-
         String promotionLine;
         while ((promotionLine = reader.readLine()) != null) {
             Promotion promotion = parsePromotion(promotionLine);
