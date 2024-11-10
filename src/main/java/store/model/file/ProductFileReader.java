@@ -31,7 +31,7 @@ public class ProductFileReader {
     private Map<String, List<Product>> readProductsFromFile(String filePath, List<Promotion> promotions) throws IOException {
         Map<String, List<Product>> productMap = new LinkedHashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            reader.readLine(); // Skip header
+            reader.readLine();
             reader.lines()
                     .map(line -> createProduct(line, promotions))
                     .filter(Objects::nonNull)
