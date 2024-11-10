@@ -6,6 +6,7 @@ import store.model.product.Product;
 import store.model.product.PromotionProduct;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Store {
@@ -18,19 +19,14 @@ public class Store {
     }
 
     public static Store createStore(List<Product> products) {
-        Map<String, GeneralProduct> generalProduct = new LinkedHashMap<>();
-        Map<String, PromotionProduct> promotionProduct = new LinkedHashMap<>();
-
-        for (Product product : products) {
-            if (product instanceof GeneralProduct) {
-                generalProduct.put(product.getName(), (GeneralProduct) product);
-            }
-
-            if (product instanceof PromotionProduct) {
-                promotionProduct.put(product.getName(), (PromotionProduct) product);
-            }
-        }
-
+        Map<String, GeneralProduct> generalProduct = products.stream()
+                .filter(GeneralProduct.class::isInstance)
+                .map(GeneralProduct.class::cast)
+                .collect(Collectors.toMap(Product::getName, product -> product, (p1, p2) -> p1, LinkedHashMap::new));
+        Map<String, PromotionProduct> promotionProduct = products.stream()
+                .filter(PromotionProduct.class::isInstance)
+                .map(PromotionProduct.class::cast)
+                .collect(Collectors.toMap(Product::getName, product -> product, (p1, p2) -> p1, LinkedHashMap::new));
         return new Store(generalProduct, promotionProduct);
     }
 
