@@ -42,7 +42,7 @@ public class OriginalPurchaseStrategy implements SaleStrategy {
 
     private void updateToReceipt(Store store, Receipt receipt, String productName, int quantity, int free) {
         receipt.addPurchase(productName, store.getPromotionProduct().get(productName).getPrice(), quantity);
-        receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
+        if(free != 0) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
     }
 
     private void updateToStore(Store store, Receipt receipt, String productName, int promotionQuantity, int notFree) {
