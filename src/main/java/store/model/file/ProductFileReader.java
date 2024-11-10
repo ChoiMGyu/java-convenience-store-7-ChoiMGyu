@@ -30,27 +30,43 @@ public class ProductFileReader {
 
     private Map<String, List<Product>> readProductsFromFile(String filePath, List<Promotion> promotions) throws IOException {
         Map<String, List<Product>> productMap = new LinkedHashMap<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             reader.readLine(); // Skip header
-
             reader.lines()
-                    .map(line -> createProductFromLine(line, promotions))
+                    .map(line -> createProduct(line, promotions))
                     .filter(Objects::nonNull)
-                    .forEach(product -> productMap
-                            .computeIfAbsent(product.getName(), k -> new ArrayList<>())
-                            .add(product));
+                    .forEach(product -> addProductToMap(productMap, product));
         }
         return productMap;
     }
 
-    private Product createProductFromLine(String productLine, List<Promotion> promotions) {
-        String[] productArgs = productLine.split(PRODUCT_DELIMITER);
+    private Product createProduct(String line, List<Promotion> promotions) {
+        String[] productArgs = splitProductLine(line);
         String name = productArgs[PRODUCT_NAME_IDX];
-        int price = Integer.parseInt(productArgs[PRODUCT_PRICE_IDX]);
-        int quantity = Integer.parseInt(productArgs[PRODUCT_QUANTITY_IDX]);
+        int price = parsePrice(productArgs[PRODUCT_PRICE_IDX]);
+        int quantity = parseQuantity(productArgs[PRODUCT_QUANTITY_IDX]);
         String promotionName = productArgs[PRODUCT_PROMOTION_IDX];
 
+        return createProductBasedOnPromotion(name, price, quantity, promotionName, promotions);
+    }
+
+    private String[] splitProductLine(String line) {
+        return line.split(PRODUCT_DELIMITER);
+    }
+
+    private int parsePrice(String price) {
+        return Integer.parseInt(price);
+    }
+
+    private int parseQuantity(String quantity) {
+        return Integer.parseInt(quantity);
+    }
+
+    private void addProductToMap(Map<String, List<Product>> productMap, Product product) {
+        productMap.computeIfAbsent(product.getName(), k -> new ArrayList<>()).add(product);
+    }
+
+    private Product createProductBasedOnPromotion(String name, int price, int quantity, String promotionName, List<Promotion> promotions) {
         if (isPromotionProduct(promotionName)) {
             return createPromotionProduct(name, price, quantity, promotionName, promotions);
         }

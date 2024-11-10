@@ -47,55 +47,68 @@ public class StoreController {
 
     private void storeProcess(List<Product> products, Store store) {
         while (true) {
-            outputView.printGreeting();
-            outputView.printItems(products);
+            printMenu(products);
             List<ProductDto> productDtos = inputView.readItem(store);
 
-            Receipt receipt = Receipt.createReceipt();
-            processProducts(store, productDtos, receipt);
-
-            boolean answerDiscount = inputView.readMemberDiscount();
-            printReceipt(receipt, answerDiscount);
-
-            if (!shouldContinuePurchase()) {
-                break;
-            }
+            startStore(productDtos, store);
+            if (!shouldContinuePurchase()) break;
         }
+    }
+
+    private void startStore(List<ProductDto> productDtos, Store store) {
+        Receipt receipt = Receipt.createReceipt();
+        processProducts(store, productDtos, receipt);
+
+        boolean answerDiscount = inputView.readMemberDiscount();
+        printReceipt(receipt, answerDiscount);
+    }
+
+    private void printMenu(List<Product> products) {
+        outputView.printGreeting();
+        outputView.printItems(products);
     }
 
     private void processProducts(Store store, List<ProductDto> productDtos, Receipt receipt) {
         for (ProductDto productDto : productDtos) {
-            String productName = productDto.getName();
-            int purchaseCount = productDto.getQuantity();
-
-            if (!productService.confirmPromotion(store, productName)) {
-                productService.purchaseProductGeneral(store, receipt, productName, productDto.getQuantity());
+            if (!productService.confirmPromotion(store, productDto.getName())) {
+                productService.purchaseProductGeneral(store, receipt, productDto.getName(), productDto.getQuantity());
             }
-
-            if (productService.confirmPromotion(store, productName)) {
-                SaleStrategy saleStrategy = chooseStrategy(store, productName, purchaseCount);
-                applySaleStrategy(store, receipt, productName, purchaseCount, saleStrategy);
+            if (productService.confirmPromotion(store, productDto.getName())) {
+                SaleStrategy saleStrategy = chooseStrategy(store, productDto.getName(), productDto.getQuantity());
+                applySaleStrategy(store, receipt, productDto.getName(), productDto.getQuantity(), saleStrategy);
             }
         }
     }
 
     private void applySaleStrategy(Store store, Receipt receipt, String productName, int purchaseCount, SaleStrategy saleStrategy) {
         if (saleStrategy instanceof AddOneSaleStrategy) {
-            boolean answer = inputView.readAddItem(productName, ADD_ONE);
-            saleStrategy.execute(store, receipt, productName, purchaseCount, answer);
+            applyAddOneSaleStrategy(store, receipt, productName, purchaseCount, saleStrategy);
             return;
         }
-
         if (saleStrategy instanceof PromotionOnlyStrategy) {
-            saleStrategy.execute(store, receipt, productName, purchaseCount);
+            applyPromotionOnlySaleStrategy(store, receipt, productName, purchaseCount, saleStrategy);
             return;
         }
-
         if (saleStrategy instanceof OriginalPurchaseStrategy) {
-            boolean answer = inputView.readPartialPayment(productName, productService.calculatePartial(store, productName, purchaseCount));
-            saleStrategy.execute(store, receipt, productName, purchaseCount, productService.calculatePartial(store, productName, purchaseCount), answer);
+            applyOriginalPurchaseStrategy(store, receipt, productName, purchaseCount, saleStrategy);
         }
     }
+
+    private void applyAddOneSaleStrategy(Store store, Receipt receipt, String productName, int purchaseCount, SaleStrategy saleStrategy) {
+        boolean answer = inputView.readAddItem(productName, ADD_ONE);
+        saleStrategy.execute(store, receipt, productName, purchaseCount, answer);
+    }
+
+    private void applyPromotionOnlySaleStrategy(Store store, Receipt receipt, String productName, int purchaseCount, SaleStrategy saleStrategy) {
+        saleStrategy.execute(store, receipt, productName, purchaseCount);
+    }
+
+    private void applyOriginalPurchaseStrategy(Store store, Receipt receipt, String productName, int purchaseCount, SaleStrategy saleStrategy) {
+        boolean answer = inputView.readPartialPayment(productName, productService.calculatePartial(store, productName, purchaseCount));
+        int partialCount = productService.calculatePartial(store, productName, purchaseCount);
+        saleStrategy.execute(store, receipt, productName, purchaseCount, partialCount, answer);
+    }
+
 
     private SaleStrategy chooseStrategy(Store store, String productName, int purchaseCount) {
         if (!productService.confirmPromotion(store, productName)) {
