@@ -45,7 +45,7 @@ public enum PromotionType {
     private FreeProductDto calculateBuyOneGetOne(int quantity) {
         int freeProducts = quantity / BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant();
         boolean addOne = false;
-        if (quantity % BUY_TWO_GET_ONE_DIVISOR.getAddOneConstant() == BUY_TWO_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
+        if (quantity % BUY_ONE_GET_ONE_DIVISOR.getAddOneConstant() == BUY_ONE_GET_ONE_CAN_ADDONE.getAddOneConstant()) {
             addOne = true;
         }
         return new FreeProductDto(freeProducts, addOne);
