@@ -24,17 +24,18 @@ public class InputValidator {
 
     public List<ProductDto> validateItemInput(Store store, String item) {
         validateBlank(item);
-        if (!item.matches(ITEMS_REGEX)) {
-            throw new StoreException(ITEM_SHAPE_ERROR);
-        }
-
+        validateItemFormat(item);
         List<ProductDto> products = parseItems(item);
-
         validateSameProduct(products);
         validateExistingProducts(store, products);
         validateProductQuantities(store, products);
-
         return Collections.unmodifiableList(products);
+    }
+
+    private void validateItemFormat(String item) {
+        if (!item.matches(ITEMS_REGEX)) {
+            throw new StoreException(ITEM_SHAPE_ERROR);
+        }
     }
 
     private List<ProductDto> parseItems(String item) {
@@ -42,16 +43,24 @@ public class InputValidator {
         String[] itemArray = item.split(ITEM_DELIMITER);
 
         for (String itemStr : itemArray) {
-            Pattern pattern = Pattern.compile(ITEM_REGEX);
-            Matcher matcher = pattern.matcher(itemStr.strip());
-
-            if (matcher.matches()) {
-                String name = matcher.group(ITEM_NAME_IDX);
-                int quantity = Integer.parseInt(matcher.group(ITEM_QUANTITY_IDX));
-                items.add(new ProductDto(name, quantity));
-            }
+            ProductDto product = parseSingleItem(itemStr);
+            items.add(product);
         }
+
         return items;
+    }
+
+    private ProductDto parseSingleItem(String itemStr) {
+        Pattern pattern = Pattern.compile(ITEM_REGEX);
+        Matcher matcher = pattern.matcher(itemStr.strip());
+
+        if (matcher.matches()) {
+            String name = matcher.group(ITEM_NAME_IDX);
+            int quantity = Integer.parseInt(matcher.group(ITEM_QUANTITY_IDX));
+            return new ProductDto(name, quantity);
+        }
+
+        throw new StoreException(ITEM_SHAPE_ERROR);
     }
 
     private void validateSameProduct(List<ProductDto> products) {
