@@ -2,6 +2,7 @@ package store.model.sale;
 
 import store.model.Receipt;
 import store.model.Store;
+import store.model.StoreConstant;
 
 public class PromotionOnlyStrategy implements SaleStrategy {
     @Override
@@ -13,7 +14,7 @@ public class PromotionOnlyStrategy implements SaleStrategy {
         int free = store.getFreePromotion(productName, quantity);
 
         receipt.addPurchase(productName, store.getPromotionProduct().get(productName).getPrice(), quantity);
-        if(free != 0) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
+        if(free != StoreConstant.PROMOTION_NOT_EXIST.getMessage()) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
         store.updateStorePromotion(productName, quantity);
     }
 }

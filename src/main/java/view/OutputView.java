@@ -12,13 +12,16 @@ import java.util.Locale;
 import java.util.Map;
 
 public class OutputView {
+    private static final String GREETING_MESSAGE = "안녕하세요. W편의점입니다.";
+    private static final String NOW_ITEM_MESSAGE = "현재 보유하고 있는 상품입니다.";
+
     private void printLineSeperate() {
         System.out.print(System.lineSeparator());
     }
 
     public void printGreeting() {
-        System.out.println("안녕하세요. W편의점입니다.");
-        System.out.println("현재 보유하고 있는 상품입니다.");
+        System.out.println(GREETING_MESSAGE);
+        System.out.println(NOW_ITEM_MESSAGE);
         printLineSeperate();
     }
 

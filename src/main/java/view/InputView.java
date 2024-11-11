@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class InputView {
+    private static final String READ_ITEM_MESSAGE = "구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])";
+    private static final String MEMBERSHIP_MESSAGE = "멤버십 할인을 받으시겠습니까? (Y/N)";
+    private static final String MORE_PURCHASE_MESSAGE = "감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)";
 
     private final Supplier<String> reader;
     private final InputValidator inputValidator;
@@ -36,7 +39,7 @@ public class InputView {
 
     public List<ProductDto> readItem(Store store) {
         return repeatLoop(() -> {
-            System.out.println("구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])");
+            System.out.println(READ_ITEM_MESSAGE);
             String item = reader.get();
             printLineSeperate();
             List<ProductDto> items = inputValidator.validateItemInput(store, item);
@@ -68,7 +71,7 @@ public class InputView {
 
     public boolean readMemberDiscount() {
         return repeatLoop(() -> {
-            System.out.println("멤버십 할인을 받으시겠습니까? (Y/N)");
+            System.out.println(MEMBERSHIP_MESSAGE);
             String discountAnswer = reader.get();
             printLineSeperate();
             boolean answer = inputValidator.validateAnswer(discountAnswer);
@@ -78,7 +81,7 @@ public class InputView {
 
     public boolean readMorePurchase() {
         return repeatLoop(() -> {
-            System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
+            System.out.println(MORE_PURCHASE_MESSAGE);
             String morePurchaseAnswer = reader.get();
             printLineSeperate();
             boolean answer = inputValidator.validateAnswer(morePurchaseAnswer);

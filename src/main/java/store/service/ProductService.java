@@ -3,6 +3,7 @@ package store.service;
 import store.dto.SaleStrategyDto;
 import store.model.Receipt;
 import store.model.Store;
+import store.model.StoreConstant;
 import store.model.product.PromotionProduct;
 import store.model.promotion.PromotionType;
 
@@ -17,7 +18,7 @@ public class ProductService {
     }
 
     public boolean confirmAddPromotion(Store store, String productName, int purchase) {
-        if (store.hasPromotion(productName) && store.enoughQuantity(productName, purchase) > 0) {
+        if (store.hasPromotion(productName) && store.enoughQuantity(productName, purchase) > StoreConstant.QUANTITY_PURCHASE_SAME.getMessage()) {
             return store.checkAddOne(productName, purchase);
         }
         return false;

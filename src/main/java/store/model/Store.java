@@ -55,7 +55,7 @@ public class Store {
             PromotionProduct promotionProduct = this.promotionProduct.get(name);
             return Integer.compare(promotionProduct.getQuantity(), quantity);
         }
-        return 0;
+        return StoreConstant.QUANTITY_PURCHASE_SAME.getMessage();
     }
 
     public boolean checkAddOne(String name, int quantity) {

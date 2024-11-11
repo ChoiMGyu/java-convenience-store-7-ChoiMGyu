@@ -4,6 +4,7 @@ import store.dto.SaleStrategyDto;
 import store.model.Receipt;
 import store.model.ReceiptContent;
 import store.model.Store;
+import store.model.StoreConstant;
 import store.model.file.ProductFileReader;
 import store.model.file.PromotionFileReader;
 import store.model.product.Product;
@@ -121,14 +122,14 @@ public class StoreController {
 
         SaleStrategyDto strategyDto = productService.confirmOnePromotion(store, productName, purchaseCount);
 
-        if (strategyDto.getProductQuantityStatus() == 0) {
+        if (strategyDto.getProductQuantityStatus() == StoreConstant.QUANTITY_MORE.getMessage()) {
             if (strategyDto.getOnePromotion() || purchaseCount % 2 == 1) {
                 return new PromotionOnlyStrategy();
             }
             return new OriginalPurchaseStrategy();
         }
 
-        if (strategyDto.getProductQuantityStatus() == -1) {
+        if (strategyDto.getProductQuantityStatus() == StoreConstant.PURCHASE_MORE.getMessage()) {
             return new OriginalPurchaseStrategy();
         }
 

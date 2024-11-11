@@ -2,10 +2,10 @@ package store.model.sale;
 
 import store.model.Receipt;
 import store.model.Store;
+import store.model.StoreConstant;
 
 public class AddOneSaleStrategy implements SaleStrategy {
     private static final int ADD_ONE = 1;
-    private static final int ZERO_COUNT_PRODUCT = 0;
 
     @Override
     public void execute(Store store, Receipt receipt, String productName, int quantity, Object... options) {
@@ -44,7 +44,7 @@ public class AddOneSaleStrategy implements SaleStrategy {
     }
 
     private void addGiftItemsToReceiptIfApplicable(Receipt receipt, String productName, int freeItems, Store store) {
-        if (freeItems != ZERO_COUNT_PRODUCT) {
+        if (freeItems != StoreConstant.PROMOTION_NOT_EXIST.getMessage()) {
             int productPrice = store.getPromotionProduct().get(productName).getPrice();
             receipt.addGift(productName, productPrice, freeItems);
         }

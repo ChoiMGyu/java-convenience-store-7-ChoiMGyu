@@ -2,10 +2,9 @@ package store.model.sale;
 
 import store.model.Receipt;
 import store.model.Store;
+import store.model.StoreConstant;
 
 public class OriginalPurchaseStrategy implements SaleStrategy {
-    private static final int PROMOTION_NOT_EXIST = 0;
-
     @Override
     public void execute(Store store, Receipt receipt, String productName, int quantity, Object... options) {
         int partial = (int) options[0];
@@ -37,16 +36,16 @@ public class OriginalPurchaseStrategy implements SaleStrategy {
         int notFree = quantity - free;
 
         updateToReceipt(store, receipt, productName, quantity, free);
-        updateToStore(store, receipt, productName, PROMOTION_NOT_EXIST, notFree);
+        updateToStore(store, productName, StoreConstant.PROMOTION_NOT_EXIST.getMessage(), notFree);
     }
 
     private void updateToReceipt(Store store, Receipt receipt, String productName, int quantity, int free) {
         receipt.addPurchase(productName, store.getPromotionProduct().get(productName).getPrice(), quantity);
-        if(free != 0) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
+        if(free != StoreConstant.PROMOTION_NOT_EXIST.getMessage()) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
     }
 
-    private void updateToStore(Store store, Receipt receipt, String productName, int promotionQuantity, int notFree) {
-        if(promotionQuantity != PROMOTION_NOT_EXIST) {
+    private void updateToStore(Store store, String productName, int promotionQuantity, int notFree) {
+        if(promotionQuantity != StoreConstant.PROMOTION_NOT_EXIST.getMessage()) {
             store.updateStorePromotion(productName, promotionQuantity);
         }
         store.updateStoreGeneral(productName, notFree);

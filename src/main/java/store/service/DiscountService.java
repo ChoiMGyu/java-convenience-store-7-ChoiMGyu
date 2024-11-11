@@ -1,9 +1,7 @@
 package store.service;
 
-import store.model.ReceiptContent;
 import store.model.Receipt;
-
-import java.util.Map;
+import store.model.ReceiptContent;
 
 public class DiscountService {
     private static final int NO_MEMBERSHIP_DISCOUNT = 0;
