@@ -28,7 +28,7 @@ public class ProductFileReader {
                 .collect(Collectors.toList());
     }
 
-    private Map<String, List<Product>> readProductsFromFile(String filePath, List<Promotion> promotions) throws IOException {
+    private Map<String, List<Product>> readProductsFromFile(String filePath, List<Promotion> promotions) {
         Map<String, List<Product>> productMap = new LinkedHashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             reader.readLine();
@@ -36,6 +36,8 @@ public class ProductFileReader {
                     .map(line -> createProduct(line, promotions))
                     .filter(Objects::nonNull)
                     .forEach(product -> addProductToMap(productMap, product));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
         }
         return productMap;
     }

@@ -23,10 +23,12 @@ public class Store {
                 .filter(GeneralProduct.class::isInstance)
                 .map(GeneralProduct.class::cast)
                 .collect(Collectors.toMap(Product::getName, product -> product, (p1, p2) -> p1, LinkedHashMap::new));
+
         Map<String, PromotionProduct> promotionProduct = products.stream()
                 .filter(PromotionProduct.class::isInstance)
                 .map(PromotionProduct.class::cast)
                 .collect(Collectors.toMap(Product::getName, product -> product, (p1, p2) -> p1, LinkedHashMap::new));
+
         return new Store(generalProduct, promotionProduct);
     }
 
