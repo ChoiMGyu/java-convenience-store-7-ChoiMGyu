@@ -23,7 +23,7 @@ public class AddOneSaleStrategyTest {
     private List<Product> productList;
     private Receipt receipt;
 
-    public SaleStrategy saleStrategy;
+    private SaleStrategy saleStrategy;
 
     @BeforeEach
     public void setUp() {
