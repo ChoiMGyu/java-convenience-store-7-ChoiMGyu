@@ -2,11 +2,13 @@ package view;
 
 import store.model.ReceiptContent;
 import store.model.Receipt;
+import store.model.ReceiptTitle;
 import store.model.product.GeneralProduct;
 import store.model.product.Product;
 import store.model.product.PromotionProduct;
 
 import java.text.NumberFormat;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,8 +53,17 @@ public class OutputView {
 
     private void printPurchase(Receipt receipt) {
         System.out.printf("%-18s%-9s%-4s\n", "상품명", "수량", "금액");
-        Map<String, ReceiptContent> purchase = receipt.getPurchase();
-        for (Map.Entry<String, ReceiptContent> entry : purchase.entrySet()) {
+        Map<String, ReceiptContent> printMap = new LinkedHashMap<>();
+        Map<ReceiptTitle, ReceiptContent> purchase = receipt.getPurchase();
+        for (Map.Entry<ReceiptTitle, ReceiptContent> entry : purchase.entrySet()) {
+            if(printMap.containsKey(entry.getKey().getName())) {
+                printMap.replace(entry.getKey().getName(), new ReceiptContent(entry.getValue().getPrice(), printMap.get(entry.getKey().getName()).getQuantity() + entry.getValue().getQuantity()));
+            }
+            if(!printMap.containsKey(entry.getKey().getName())){
+                printMap.put(entry.getKey().getName(), new ReceiptContent(entry.getValue().getPrice(), entry.getValue().getQuantity()));
+            }
+        }
+        for (Map.Entry<String, ReceiptContent> entry : printMap.entrySet()) {
             int price = entry.getValue().calculateProductPerMoney();
             String formattedMoney = numberFormatKorea(price);
             System.out.printf("%-17s%-10d%-4s\n", entry.getKey(), entry.getValue().getQuantity(), formattedMoney);
@@ -61,9 +72,9 @@ public class OutputView {
 
     private void printGift(Receipt receipt) {
         System.out.println("=============증     정===============");
-        Map<String, ReceiptContent> gift = receipt.getGift();
-        for (Map.Entry<String, ReceiptContent> entry : gift.entrySet()) {
-            System.out.printf("%-17s%-10d\n", entry.getKey(), entry.getValue().getQuantity());
+        Map<ReceiptTitle, ReceiptContent> gift = receipt.getGift();
+        for (Map.Entry<ReceiptTitle, ReceiptContent> entry : gift.entrySet()) {
+            System.out.printf("%-17s%-10d\n", entry.getKey().getName(), entry.getValue().getQuantity());
         }
     }
 

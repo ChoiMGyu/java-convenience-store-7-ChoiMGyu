@@ -10,7 +10,7 @@ public class GeneralPurchaseStrategy implements SaleStrategy {
     }
 
     private void purchaseProductGeneral(Store store, Receipt receipt, String productName, int quantity) {
-        receipt.addPurchase(productName, store.getGenenralProduct().get(productName).getPrice(), quantity);
+        receipt.addPurchase(productName, true, store.getGenenralProduct().get(productName).getPrice(), quantity);
         store.updateStoreGeneral(productName, quantity);
     }
 }

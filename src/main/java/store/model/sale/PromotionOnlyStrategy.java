@@ -13,7 +13,7 @@ public class PromotionOnlyStrategy implements SaleStrategy {
     private void purchaseProductPromotion(Store store, Receipt receipt, String productName, int quantity) {
         int free = store.getFreePromotion(productName, quantity);
 
-        receipt.addPurchase(productName, store.getPromotionProduct().get(productName).getPrice(), quantity);
+        receipt.addPurchase(productName, false, store.getPromotionProduct().get(productName).getPrice(), quantity);
         if(free != StoreConstant.PROMOTION_NOT_EXIST.getMessage()) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
         store.updateStorePromotion(productName, quantity);
     }

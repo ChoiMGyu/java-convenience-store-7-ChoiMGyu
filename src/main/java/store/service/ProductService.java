@@ -9,7 +9,7 @@ import store.model.promotion.PromotionType;
 
 public class ProductService {
     public void purchaseProductGeneral(Store store, Receipt receipt, String productName, int purchase) {
-        receipt.addPurchase(productName, store.getGenenralProduct().get(productName).getPrice(), purchase);
+        receipt.addPurchase(productName, true, store.getGenenralProduct().get(productName).getPrice(), purchase);
         store.updateStoreGeneral(productName, purchase);
     }
 

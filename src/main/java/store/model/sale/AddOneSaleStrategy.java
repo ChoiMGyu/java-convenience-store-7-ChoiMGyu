@@ -40,7 +40,7 @@ public class AddOneSaleStrategy implements SaleStrategy {
 
     private void addPurchasedItemsToReceipt(Receipt receipt, String productName, int totalQuantity, Store store) {
         int productPrice = store.getPromotionProduct().get(productName).getPrice();
-        receipt.addPurchase(productName, productPrice, totalQuantity);
+        receipt.addPurchase(productName, false, productPrice, totalQuantity);
     }
 
     private void addGiftItemsToReceiptIfApplicable(Receipt receipt, String productName, int freeItems, Store store) {

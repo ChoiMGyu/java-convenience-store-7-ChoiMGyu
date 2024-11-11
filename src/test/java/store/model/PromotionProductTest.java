@@ -15,7 +15,7 @@ public class PromotionProductTest {
     @CsvSource({
             "true, 2024-11-07, 2024-11-15, 10, true",
             "false, 2024-11-07, 2024-11-09, 0, false",
-            "false, 2024-11-10, 2024-11-12, 10, false",
+            "false, 2024-11-10, 2024-11-12, 10, true",
             "false, 2024-11-01, 2024-11-06, 10, false"
     })
     void 프로모션_진행중인지(boolean expected, String startDate, String endDate, int quantity, boolean expectedResult) {

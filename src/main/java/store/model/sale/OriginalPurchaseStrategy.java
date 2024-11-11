@@ -26,7 +26,7 @@ public class OriginalPurchaseStrategy implements SaleStrategy {
         int promotionQuantity = store.getPromotionProduct().get(productName).getQuantity();
         int notFree = quantity - promotionQuantity;
 
-        updateToReceipt(store, receipt, productName, quantity, free);
+        updateToReceipt(store, receipt, productName, quantity, free, partial);
         updateToStore(store, productName, promotionQuantity, notFree);
     }
 
@@ -35,12 +35,13 @@ public class OriginalPurchaseStrategy implements SaleStrategy {
         int free = store.getFreePromotion(productName, quantity);
         int notFree = quantity - free;
 
-        updateToReceipt(store, receipt, productName, quantity, free);
+        updateToReceipt(store, receipt, productName, quantity, free, partial);
         updateToStore(store, productName, StoreConstant.PROMOTION_NOT_EXIST.getMessage(), notFree);
     }
 
-    private void updateToReceipt(Store store, Receipt receipt, String productName, int quantity, int free) {
-        receipt.addPurchase(productName, store.getPromotionProduct().get(productName).getPrice(), quantity);
+    private void updateToReceipt(Store store, Receipt receipt, String productName, int quantity, int free, int partial) {
+        receipt.addPurchase(productName, false, store.getPromotionProduct().get(productName).getPrice(), quantity - partial);
+        receipt.addPurchase(productName, true, store.getPromotionProduct().get(productName).getPrice(), partial);
         if(free != StoreConstant.PROMOTION_NOT_EXIST.getMessage()) receipt.addGift(productName, store.getPromotionProduct().get(productName).getPrice(), free);
     }
 
