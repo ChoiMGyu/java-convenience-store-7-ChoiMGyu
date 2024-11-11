@@ -8,7 +8,6 @@ import store.model.product.GeneralProduct;
 import store.model.product.Product;
 import store.model.product.PromotionProduct;
 import store.model.promotion.PromotionType;
-import store.model.sale.AddOneSaleStrategy;
 import store.model.sale.PromotionOnlyStrategy;
 import store.model.sale.SaleStrategy;
 
