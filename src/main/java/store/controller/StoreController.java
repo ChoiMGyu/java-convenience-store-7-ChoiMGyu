@@ -122,7 +122,7 @@ public class StoreController {
 
         SaleStrategyDto strategyDto = productService.confirmOnePromotion(store, productName, purchaseCount);
 
-        if (strategyDto.getProductQuantityStatus() == StoreConstant.QUANTITY_MORE.getMessage()) {
+        if (strategyDto.getProductQuantityStatus() == StoreConstant.QUANTITY_PURCHASE_SAME.getMessage()) {
             if (strategyDto.getOnePromotion() || purchaseCount % 2 == 1) {
                 return new PromotionOnlyStrategy();
             }
