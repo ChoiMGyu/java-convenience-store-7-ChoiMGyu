@@ -27,7 +27,7 @@ public class OriginalPurchaseStrategy implements SaleStrategy {
         int notFree = quantity - promotionQuantity;
 
         updateToReceipt(store, receipt, productName, quantity, free);
-        updateToStore(store, receipt, productName, promotionQuantity, notFree);
+        updateToStore(store, productName, promotionQuantity, notFree);
     }
 
     private void handleOriginalPurchase(Store store, Receipt receipt, String productName, int quantity, int partial) {
